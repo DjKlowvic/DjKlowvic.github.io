@@ -87,89 +87,110 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Play button click interaction
+  // Audio Playback & Volume Fade-in logic
+  const bgAudio = document.getElementById('bg-audio');
   const playBtn = document.getElementById('play-btn');
   const playText = document.getElementById('play-text');
   const turntable = document.getElementById('turntable-disk');
   const waveBars = document.querySelectorAll('.wave-bar');
+  let isPlaying = false;
+  let fadeInterval = null;
 
-  playBtn.addEventListener('click', () => {
-    isPlaying = !isPlaying;
-    if (isPlaying) {
-      playText.textContent = "PAUSE...";
-      playBtn.querySelector('i').setAttribute('data-lucide', 'pause');
-      turntable.classList.remove('paused');
+  function setPlayingUI(playing) {
+    isPlaying = playing;
+    if (playing) {
+      if (playText) playText.textContent = "PAUSE...";
+      const icon = playBtn ? playBtn.querySelector('i') : null;
+      if (icon) icon.setAttribute('data-lucide', 'pause');
+      if (turntable) turntable.classList.remove('paused');
       waveBars.forEach(bar => bar.style.animationPlayState = 'running');
-      startElectronicBeat();
     } else {
-      playText.textContent = "PLAY NOW...";
-      playBtn.querySelector('i').setAttribute('data-lucide', 'play');
-      turntable.classList.add('paused');
+      if (playText) playText.textContent = "PLAY NOW...";
+      const icon = playBtn ? playBtn.querySelector('i') : null;
+      if (icon) icon.setAttribute('data-lucide', 'play');
+      if (turntable) turntable.classList.add('paused');
       waveBars.forEach(bar => bar.style.animationPlayState = 'paused');
-      stopElectronicBeat();
     }
     lucide.createIcons();
-  });
+  }
+
+  // Smooth Volume Fade In
+  function fadeInAudio(targetVolume = 1.0, durationMs = 3000) {
+    if (!bgAudio) return;
+    if (fadeInterval) clearInterval(fadeInterval);
+
+    bgAudio.volume = 0.05;
+    const playPromise = bgAudio.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        setPlayingUI(true);
+        const steps = 30;
+        const stepTime = durationMs / steps;
+        const volumeIncrement = targetVolume / steps;
+
+        fadeInterval = setInterval(() => {
+          if (bgAudio.volume + volumeIncrement < targetVolume) {
+            bgAudio.volume += volumeIncrement;
+          } else {
+            bgAudio.volume = targetVolume;
+            clearInterval(fadeInterval);
+            fadeInterval = null;
+          }
+        }, stepTime);
+      }).catch(err => {
+        console.warn("Autoplay was prevented by browser, click anywhere to start:", err);
+      });
+    }
+  }
+
+  // Fade out audio before pausing
+  function fadeOutAudio(durationMs = 600) {
+    if (!bgAudio || bgAudio.paused) return;
+    if (fadeInterval) clearInterval(fadeInterval);
+
+    const steps = 20;
+    const stepTime = durationMs / steps;
+    const volumeDecrement = bgAudio.volume / steps;
+
+    fadeInterval = setInterval(() => {
+      if (bgAudio.volume - volumeDecrement > 0.05) {
+        bgAudio.volume -= volumeDecrement;
+      } else {
+        bgAudio.volume = 0;
+        bgAudio.pause();
+        clearInterval(fadeInterval);
+        fadeInterval = null;
+        setPlayingUI(false);
+      }
+    }, stepTime);
+  }
+
+  // Tự động kích hoạt khi người dùng chạm hoặc click vào BẤT KỲ ĐÂU trên trang
+  let userInteracted = false;
+  function triggerAudioOnInteraction() {
+    if (!userInteracted) {
+      userInteracted = true;
+      fadeInAudio(1.0, 3000);
+      document.removeEventListener('click', triggerAudioOnInteraction);
+      document.removeEventListener('keydown', triggerAudioOnInteraction);
+      document.removeEventListener('touchstart', triggerAudioOnInteraction);
+    }
+  }
+
+  document.addEventListener('click', triggerAudioOnInteraction);
+  document.addEventListener('keydown', triggerAudioOnInteraction);
+  document.addEventListener('touchstart', triggerAudioOnInteraction);
+
+  // Nút PLAY NOW / PAUSE click
+  if (playBtn) {
+    playBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userInteracted = true;
+      if (!isPlaying) {
+        fadeInAudio(1.0, 1500);
+      } else {
+        fadeOutAudio(500);
+      }
+    });
+  }
 });
-
-// Procedural EDM Synth Beat Generator using Web Audio API (no external mp3 needed)
-function startElectronicBeat() {
-  try {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!audioCtx) {
-      audioCtx = new AudioContext();
-    }
-    if (audioCtx.state === 'suspended') {
-      audioCtx.resume();
-    }
-
-    let step = 0;
-    const bpm = 126;
-    const intervalTime = (60 / bpm / 2) * 1000;
-
-    oscInterval = setInterval(() => {
-      if (!audioCtx) return;
-
-      const t = audioCtx.currentTime;
-      // Kick drum on 1, 3, 5, 7
-      if (step % 2 === 0) {
-        const kick = audioCtx.createOscillator();
-        const kickGain = audioCtx.createGain();
-        kick.frequency.setValueAtTime(140, t);
-        kick.frequency.exponentialRampToValueAtTime(0.01, t + 0.3);
-        kickGain.gain.setValueAtTime(0.7, t);
-        kickGain.gain.exponentialRampToValueAtTime(0.01, t + 0.3);
-        kick.connect(kickGain);
-        kickGain.connect(audioCtx.destination);
-        kick.start(t);
-        kick.stop(t + 0.3);
-      }
-
-      // Hi-hat / synth chord pulse
-      if (step % 2 === 1) {
-        const synth = audioCtx.createOscillator();
-        const synthGain = audioCtx.createGain();
-        synth.type = 'sawtooth';
-        const notes = [220, 261.63, 329.63, 392.00, 440];
-        synth.frequency.setValueAtTime(notes[Math.floor(Math.random() * notes.length)], t);
-        synthGain.gain.setValueAtTime(0.12, t);
-        synthGain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
-        synth.connect(synthGain);
-        synthGain.connect(audioCtx.destination);
-        synth.start(t);
-        synth.stop(t + 0.15);
-      }
-
-      step = (step + 1) % 8;
-    }, intervalTime);
-  } catch (e) {
-    console.warn("Web Audio autoplay restriction:", e);
-  }
-}
-
-function stopElectronicBeat() {
-  if (oscInterval) {
-    clearInterval(oscInterval);
-    oscInterval = null;
-  }
-}
