@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,800&family=Outfit:wght@400;600;700;800;900&display=swap');
+
+:root {
+  --primary-red: #ff1e38;
+  --secondary-red: #d90429;
+  --dark-bg: #0d0c0f;
+  --card-bg: rgba(26, 11, 15, 0.85);
+  --light-text: #ffffff;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: var(--dark-bg);
+  color: var(--light-text);
+  overflow-x: hidden;
+  background-image: url('anh/1789725768645_8977707432731428563_8977707432731428563_09bd08bd46c33d6a2ebb3f1d1d5a3f87.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.font-display {
+  font-family: 'Outfit', sans-serif;
+}
+
+.soft-shadow {
+  box-shadow: 0 20px 40px -10px rgba(255, 30, 56, 0.4);
+}
+
+.soft-shadow-subtle {
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+}
+
+.btn-shadow {
+  box-shadow: 0 12px 25px -6px rgba(255, 30, 56, 0.6);
+}
+
+.card-inner-glow {
+  box-shadow: inset 0 2px 6px rgba(255, 255, 255, 0.15), 0 15px 35px rgba(217, 4, 41, 0.35);
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin-slow {
+  animation: spinSlow 12s linear infinite;
+}
+
+.paused {
+  animation-play-state: paused !important;
+}
+
+@keyframes soundWave {
+  0%, 100% { height: 6px; }
+  50% { height: 28px; }
+}
+
+.wave-bar {
+  animation: soundWave 1.2s ease-in-out infinite;
+}
+.wave-bar:nth-child(2) { animation-delay: 0.15s; }
+.wave-bar:nth-child(3) { animation-delay: 0.3s; }
+.wave-bar:nth-child(4) { animation-delay: 0.45s; }
+.wave-bar:nth-child(5) { animation-delay: 0.2s; }
+
+.top-right-badge {
+  border-bottom-left-radius: 65px;
+}
+
+.bottom-curve-left {
+  border-top-right-radius: 65px;
+}
+
+.bottom-curve-right {
+  border-top-left-radius: 65px;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 30, 56, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 14px rgba(255, 30, 56, 0);
+  }
+}
+
+.play-pulse {
+  animation: pulseGlow 2.5s infinite;
+}
+
+@keyframes floatGentle {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-float {
+  animation: floatGentle 4s ease-in-out infinite;
+}

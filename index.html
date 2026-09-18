@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DJ. - Experience the Ultimate DJ Vibes</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts & Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+  <!-- GSAP Animation Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="min-h-screen flex flex-col justify-between relative select-none bg-black text-white">
+
+  <!-- TOP BAR / HEADER -->
+  <header class="w-full pt-4 px-4 md:px-10 lg:px-14 flex items-center justify-between z-30">
+    <!-- Navbar Capsule Pill -->
+    <nav id="navbar" class="bg-black/60 backdrop-blur-md rounded-full px-6 py-2.5 flex items-center gap-6 md:gap-10 shadow-lg border border-red-500/30">
+      <!-- Logo -->
+      <a href="#" class="font-display font-black text-3xl italic text-white tracking-wider flex items-center drop-shadow-sm hover:scale-105 transition-transform">
+        DJ<span class="text-[#ff1e38]">.</span>
+      </a>
+
+      <!-- Menu links -->
+      <div class="hidden md:flex items-center gap-7 text-gray-200 font-medium text-sm">
+        <a href="#home" class="hover:text-[#ff1e38] transition-colors">Home</a>
+        <a href="#tickets" class="hover:text-[#ff1e38] transition-colors">Ticket's</a>
+        <a href="#support" class="hover:text-[#ff1e38] transition-colors">Support</a>
+      </div>
+
+      <!-- Search icon -->
+      <button class="text-white hover:text-[#ff1e38] hover:rotate-90 transition-all p-1">
+        <i data-lucide="search" class="w-4 h-4"></i>
+      </button>
+
+      <!-- Sign in button -->
+      <button class="bg-[#ff1e38] hover:bg-[#d90429] text-white text-sm font-semibold px-6 py-2 rounded-full transition-all duration-300 shadow-md hover:shadow-red-500/50 active:scale-95">
+        Sign in
+      </button>
+    </nav>
+
+    <!-- Top Right Curved Badge (230+ CONCERT EXPERIENCE) -->
+  </header>
+
+  <!-- MAIN HERO SECTION -->
+  <main class="w-full flex-1 grid grid-cols-1 lg:grid-cols-12 items-center px-4 md:px-10 lg:px-14 relative z-10 py-4 my-auto">
+    
+    <!-- Left Hero Typography & CTA -->
+    <div id="hero-text" class="lg:col-span-4 z-20 flex flex-col justify-center space-y-5 lg:pr-4">
+      <h1 class="text-4xl md:text-5xl lg:text-[3.2rem] font-black font-display text-white leading-[1.08] tracking-tight drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
+        Experience the<br>
+        <span class="text-[#ff1e38] drop-shadow-[0_0_20px_rgba(255,30,56,0.6)]">Ultimate DJ</span> Vibes
+      </h1>
+      
+      <p class="text-xs md:text-sm font-bold tracking-widest text-red-400 uppercase drop-shadow">
+        Your Soundtrack to the Nightlife
+      </p>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-4 pt-2">
+        <button id="attend-btn" class="bg-[#ff1e38] hover:bg-[#d90429] text-white font-extrabold text-sm tracking-wider uppercase px-8 py-3.5 rounded-2xl transition-all duration-300 shadow-lg shadow-red-600/40 hover:scale-105 active:scale-95 border border-red-400/30">
+          Attend
+        </button>
+
+        <button id="play-btn" class="group flex items-center gap-3 px-3 py-2 rounded-full hover:bg-red-950/40 transition-colors border border-red-500/20">
+          <span class="w-12 h-12 rounded-full bg-[#ff1e38] flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform play-pulse">
+            <i data-lucide="play" class="w-5 h-5 fill-white ml-0.5"></i>
+          </span>
+          <span id="play-text" class="font-extrabold text-xs tracking-wider text-red-400 uppercase group-hover:text-red-300">
+            Play Now...
+          </span>
+        </button>
+      </div>
+
+      <!-- Live sound wave equalizer animation -->
+      <div class="flex items-end gap-1.5 h-7 pt-2">
+        <span class="wave-bar w-1.5 bg-[#ff1e38] rounded-full"></span>
+        <span class="wave-bar w-1.5 bg-[#ff1e38] rounded-full"></span>
+        <span class="wave-bar w-1.5 bg-[#ff1e38] rounded-full"></span>
+        <span class="wave-bar w-1.5 bg-[#ff1e38] rounded-full"></span>
+        <span class="wave-bar w-1.5 bg-[#ff1e38] rounded-full"></span>
+      </div>
+    </div>
+
+    <!-- Center Mascot / DJ Element -->
+    <div id="center-dj" class="lg:col-span-5 flex flex-col items-center justify-center relative my-6 lg:my-0">
+      
+      <!-- Ambient Red Glow Behind Mascot -->
+      <div class="absolute w-72 h-72 md:w-96 md:h-96 bg-gradient-to-tr from-[#ff1e38]/50 to-red-900/30 rounded-full blur-3xl -z-10 animate-pulse"></div>
+
+      <!-- Main Mascot Image Frame -->
+      <div class="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 flex items-center justify-center animate-float">
+        <div class="relative w-full h-full rounded-[40px] overflow-hidden p-2 bg-gradient-to-b from-red-500/30 to-black/80 backdrop-blur-md border-2 border-red-500/40 shadow-2xl">
+          <img 
+            src="anh/1789725557243_8977707432731428563_8977707432731428563_a3853ff02458df8dcb80ea06661ec9a9.jpg" 
+            alt="DJ Master" 
+            class="w-full h-full object-cover rounded-[34px] hover:scale-105 transition-transform duration-700"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-[34px]"></div>
+        </div>
+
+        <!-- DJ Headphones / Badge Accent -->
+        <div class="absolute -top-3 -right-3 bg-black/90 text-white p-3 rounded-2xl shadow-xl flex items-center gap-2 border border-red-500/50">
+          <i data-lucide="headphones" class="w-5 h-5 text-[#ff1e38]"></i>
+          <span class="text-xs font-black tracking-wider uppercase text-red-100">Live Mix</span>
+        </div>
+      </div>
+
+      <!-- Turntable Controller Base -->
+      <div class="relative -mt-8 z-20 w-80 md:w-96 bg-[#110e10] rounded-2xl p-3 shadow-2xl border border-red-500/30 flex items-center justify-between">
+        <!-- Turntable Disk 1 -->
+        <div class="flex items-center gap-3">
+          <div id="turntable-disk" class="w-12 h-12 rounded-full bg-gradient-to-tr from-gray-950 via-gray-900 to-black border-2 border-red-600/60 flex items-center justify-center spin-slow paused shadow-inner">
+            <div class="w-4 h-4 rounded-full bg-[#ff1e38] border-2 border-white shadow-[0_0_8px_#ff1e38]"></div>
+          </div>
+          <div>
+            <div class="text-[10px] text-red-400 font-mono">BPM: 128.0</div>
+            <div class="text-[11px] text-white font-bold tracking-wide">MASTER DECK</div>
+          </div>
+        </div>
+
+        <!-- Knobs & Faders -->
+        <div class="flex items-center gap-2">
+          <div class="w-2.5 h-8 bg-black rounded-sm p-0.5 flex flex-col justify-end border border-red-950">
+            <div class="w-full h-3 bg-[#ff1e38] rounded-sm shadow-[0_0_6px_#ff1e38]"></div>
+          </div>
+          <div class="w-2.5 h-8 bg-black rounded-sm p-0.5 flex flex-col justify-center border border-red-950">
+            <div class="w-full h-3 bg-[#ff1e38] rounded-sm shadow-[0_0_6px_#ff1e38]"></div>
+          </div>
+          <div class="w-6 h-6 rounded-full bg-[#ff1e38] flex items-center justify-center shadow-lg shadow-red-600/40">
+            <i data-lucide="volume-2" class="w-3.5 h-3.5 text-white"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side Stats Badge & Dot Indicators -->
+    <div class="lg:col-span-3 flex flex-col items-center lg:items-end justify-between space-y-8 z-20">
+      
+      <!-- 100+ Work with Singers Badge -->
+
+
+      <!-- Vertical Dot Navigation Indicators -->
+      <div class="flex flex-col items-center gap-3.5 py-4">
+        <button class="indicator-dot w-4 h-4 rounded-full bg-[#ff1e38] shadow-[0_0_10px_#ff1e38] transition-all hover:scale-125"></button>
+        <button class="indicator-dot w-2.5 h-2.5 rounded-full bg-red-950 border border-red-500 hover:bg-[#ff1e38] transition-all hover:scale-125"></button>
+        <button class="indicator-dot w-2.5 h-2.5 rounded-full bg-red-950 border border-red-500 hover:bg-[#ff1e38] transition-all hover:scale-125"></button>
+        <button class="indicator-dot w-2.5 h-2.5 rounded-full bg-red-950 border border-red-500 hover:bg-[#ff1e38] transition-all hover:scale-125"></button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- BOTTOM CARDS & FOOTER BAR -->
+  <footer class="w-full px-4 md:px-10 lg:px-14 pb-6 pt-2 z-20">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
+      
+      <!-- Bottom Left: SERVICES Section -->
+      <div id="bottom-left-card" class="md:col-span-5 bg-black/85 backdrop-blur-md text-white p-6 rounded-[36px] bottom-curve-left shadow-2xl flex items-center justify-between gap-4 border-2 border-red-600/50 shadow-red-950/50">
+        <div class="flex-1 space-y-2">
+          <h3 class="font-display font-extrabold text-base tracking-wider uppercase border-b border-red-500/30 pb-1 text-[#ff1e38]">
+            Services
+          </h3>
+          <ul class="text-xs space-y-1.5 text-gray-300 leading-tight font-medium">
+            <li class="hover:translate-x-1 hover:text-[#ff1e38] transition-transform">✓ Soundtracks for Unforgettable Events</li>
+            <li class="hover:translate-x-1 hover:text-[#ff1e38] transition-transform">✓ Professional DJ Services Tailored to You</li>
+            <li class="hover:translate-x-1 hover:text-[#ff1e38] transition-transform">✓ From Clubs to Corporate: We Got Beats</li>
+          </ul>
+        </div>
+
+        <!-- Thumbnail Image -->
+        <div class="w-20 h-24 rounded-2xl overflow-hidden shadow-lg border-2 border-red-500/50 flex-shrink-0">
+          <img 
+            src="anh/1789725768645_8977707432731428563_8977707432731428563_09bd08bd46c33d6a2ebb3f1d1d5a3f87.jpg" 
+            alt="Service Dj Guy" 
+            class="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+          />
+        </div>
+      </div>
+
+      <!-- Center Copyright Bar -->
+      <div class="md:col-span-2 flex flex-col items-center justify-center py-2 text-center">
+        <div class="flex items-center gap-4 text-[#ff1e38] mb-1">
+          <a href="#" class="hover:scale-125 transition-transform"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+          <a href="#" class="hover:scale-125 transition-transform"><i data-lucide="twitter" class="w-4 h-4"></i></a>
+        </div>
+        <p class="text-[10px] font-black tracking-widest text-red-500 uppercase">
+          DJ© All Right Reserve
+        </p>
+      </div>
+
+      <!-- Bottom Right: EVENTS SECTION -->
+      <div id="bottom-right-card" class="md:col-span-5 bg-black/85 backdrop-blur-md text-white p-6 rounded-[36px] bottom-curve-right shadow-2xl flex items-center justify-between gap-4 border-2 border-red-600/50 shadow-red-950/50">
+        <!-- Thumbnail Image -->
+        <div class="w-20 h-24 rounded-2xl overflow-hidden shadow-lg border-2 border-red-500/50 flex-shrink-0">
+          <img 
+            src="anh/ChatGPT Image 17_41_14 18 thg 9, 2026.png" 
+            alt="Event DJ" 
+            class="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+          />
+        </div>
+
+        <div class="flex-1 space-y-2 text-right">
+          <h3 class="font-display font-extrabold text-base tracking-wider uppercase border-b border-red-500/30 pb-1 text-[#ff1e38]">
+            Events Section:
+          </h3>
+          <ul class="text-xs space-y-1.5 text-gray-300 leading-tight font-medium">
+            <li class="hover:-translate-x-1 hover:text-[#ff1e38] transition-transform">Join Us at Next Event: Floor Awaits ➔</li>
+            <li class="hover:-translate-x-1 hover:text-[#ff1e38] transition-transform">Feel The Vibe: Upcoming DJ Sessions ➔</li>
+            <li class="hover:-translate-x-1 hover:text-[#ff1e38] transition-transform">Don't Miss Out: Upcoming Big Parties ➔</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
