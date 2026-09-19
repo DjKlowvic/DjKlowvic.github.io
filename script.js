@@ -6,11 +6,12 @@ let oscInterval = null;
 // Initialize GSAP animations on DOM loaded
 document.addEventListener('DOMContentLoaded', () => {
   // GSAP Entrance Animations
-  gsap.from("#navbar", {
-    y: -50,
+  gsap.from("header", {
+    y: -40,
     opacity: 0,
-    duration: 1,
-    ease: "power3.out"
+    duration: 0.8,
+    ease: "power3.out",
+    clearProps: "transform"
   });
 
   gsap.from("#hero-text > *", {
@@ -22,22 +23,26 @@ document.addEventListener('DOMContentLoaded', () => {
     delay: 0.2
   });
 
-  gsap.from("#top-badge", {
-    x: 60,
-    y: -30,
-    opacity: 0,
-    duration: 1,
-    ease: "power3.out",
-    delay: 0.3
-  });
+  if (document.getElementById("top-badge")) {
+    gsap.from("#top-badge", {
+      x: 60,
+      y: -30,
+      opacity: 0,
+      duration: 1,
+      ease: "power3.out",
+      delay: 0.3
+    });
+  }
 
-  gsap.from("#mid-badge", {
-    x: 50,
-    opacity: 0,
-    duration: 0.9,
-    ease: "back.out(1.7)",
-    delay: 0.5
-  });
+  if (document.getElementById("mid-badge")) {
+    gsap.from("#mid-badge", {
+      x: 50,
+      opacity: 0,
+      duration: 0.9,
+      ease: "back.out(1.7)",
+      delay: 0.5
+    });
+  }
 
   gsap.from("#center-dj", {
     scale: 0.85,

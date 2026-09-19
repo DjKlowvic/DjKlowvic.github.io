@@ -2,12 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>DJ. - Experience the Ultimate DJ Vibes</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts & Custom CSS -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=4">
+  <style>
+    #mobile-menu {
+      transition: max-height 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s ease;
+      will-change: max-height, opacity;
+    }
+    #profile-dj {
+      position: relative;
+      overflow: hidden;
+      background-color: #000000;
+    }
+    .dj-neon-beam {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: #ffffff;
+      box-shadow: 0 0 6px #ffffff, 0 0 14px #ffd000, 0 0 28px #ffb703, 0 0 50px #fb8500, 0 0 80px rgba(255, 183, 3, 0.95), 0 0 130px rgba(251, 133, 0, 0.7);
+      z-index: 35;
+      pointer-events: none;
+      transform: translateX(-50%);
+      opacity: 0;
+      will-change: left, opacity;
+    }
+    .dj-neon-beam::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: -45px;
+      right: -45px;
+      background: radial-gradient(ellipse at center, rgba(255, 190, 11, 0.5) 0%, rgba(251, 133, 0, 0.2) 50%, transparent 75%);
+      pointer-events: none;
+    }
+    .dj-neon-beam::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 100%;
+      width: 90px;
+      background: linear-gradient(to left, rgba(255, 183, 3, 0.35) 0%, rgba(251, 133, 0, 0.1) 60%, transparent 100%);
+      pointer-events: none;
+    }
+  </style>
   <!-- GSAP Animation Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <!-- Lucide Icons -->
@@ -15,17 +59,16 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between relative select-none bg-black text-white">
 
-  <!-- TOP BAR / HEADER (Sticky Navigation) -->
-  <header class="sticky top-0 w-full pt-4 pb-2 px-4 md:px-10 lg:px-14 flex items-center justify-between z-50">
-    <!-- Navbar Capsule Pill -->
-    <nav id="navbar" class="bg-black/60 backdrop-blur-md rounded-full px-6 py-2.5 flex items-center gap-6 md:gap-10 shadow-lg border border-red-500/30">
+  <!-- TOP BAR / HEADER (Sticky Navigation with Smart Auto-Hide) -->
+  <header id="main-header" class="sticky top-0 w-full z-50 transition-transform duration-300 ease-in-out bg-black/85 backdrop-blur-xl border-b border-red-500/20 px-4 md:px-10 lg:px-14 py-3 md:py-3.5 shadow-2xl shadow-black/80 will-change-transform">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
       <!-- Logo --> 
-      <a href="#" class="font-display font-black text-3xl italic text-white tracking-wider flex items-center drop-shadow-sm hover:scale-105 transition-transform">
+      <a href="#home" class="font-display font-black text-2xl sm:text-3xl italic text-white tracking-wider flex items-center drop-shadow-sm hover:scale-105 transition-transform">
         DJ - MC<span class="text-[#ff1e38]">.</span>
       </a>
 
-      <!-- Menu links -->
-      <div class="hidden md:flex items-center gap-7 text-gray-200 font-medium text-sm">
+      <!-- Desktop Menu links (Capsule on larger screens) -->
+      <nav id="navbar" class="hidden md:flex items-center gap-6 lg:gap-8 bg-black/60 backdrop-blur-md rounded-full px-6 py-2 shadow-lg border border-red-500/30 text-gray-200 font-medium text-sm">
         <a href="#home" class="hover:text-[#ff1e38] transition-colors">Home</a>
 
         <!-- Profile Dropdown -->
@@ -38,7 +81,7 @@
           <!-- Dropdown Menu Box -->
           <div class="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-44 hidden group-hover:block transition-all duration-300 z-50">
             <div class="bg-black/95 backdrop-blur-xl border border-red-500/40 rounded-2xl shadow-2xl p-2 flex flex-col gap-1">
-              <a href="#profile-dj" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-gray-200 hover:text-white hover:bg-gradient-to-r hover:from-[#ff1e38] hover:to-red-900 transition-all">
+              <a href="#profile-dj" onclick="navigateToDJProfile(event)" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-gray-200 hover:text-white hover:bg-gradient-to-r hover:from-[#ff1e38] hover:to-red-900 transition-all">
                 <i data-lucide="disc" class="w-4 h-4 text-[#ff1e38]"></i>
                 <span>DJ Profile</span>
               </a>
@@ -59,8 +102,8 @@
 
           <!-- Dropdown Menu Box -->
           <div class="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-48 hidden group-hover:block transition-all duration-300 z-50">
-            <div class="bg-black/95 backdrop-blur-xl border border-red-500/40 rounded-2xl shadow-2xl p-2 flex flex-col gap-1">    
-
+            <div class="bg-black/95 backdrop-blur-xl border border-red-500/40 rounded-2xl shadow-2xl p-2 flex flex-col gap-1">
+              
               <!-- Zalo -->
               <a href="https://zalo.me/0824578947" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-gray-200 hover:text-white hover:bg-gradient-to-r hover:from-[#ff1e38] hover:to-red-900 transition-all">
                 <svg class="w-4 h-4 text-[#ff1e38] fill-current" viewBox="0 0 24 24">
@@ -96,23 +139,84 @@
         <a href="#albums" class="hover:text-[#ff1e38] transition-colors flex items-center gap-1.5">
           <span>Album</span>
         </a>
+
+        <!-- Desktop Search Icon -->
+        <button onclick="toggleSearchModal()" class="text-white hover:text-[#ff1e38] hover:rotate-90 transition-all p-1" title="Tìm kiếm">
+          <i data-lucide="search" class="w-4 h-4"></i>
+        </button>
+      </nav>
+
+      <!-- Mobile Right Controls (Search + Hamburger Toggle) -->
+      <div class="flex md:hidden items-center gap-2">
+        <button onclick="toggleSearchModal()" class="w-10 h-10 rounded-full bg-black/60 border border-red-500/30 flex items-center justify-center text-white hover:text-[#ff1e38] hover:border-red-500 transition-all" title="Tìm kiếm">
+          <i data-lucide="search" class="w-4 h-4"></i>
+        </button>
+        <button id="mobile-menu-btn" onclick="toggleMobileMenu(event)" class="w-10 h-10 rounded-full bg-black/60 border border-red-500/30 flex items-center justify-center text-white hover:text-[#ff1e38] hover:border-red-500 transition-all focus:outline-none" aria-label="Toggle menu">
+          <i id="menu-icon-bars" data-lucide="menu" class="w-5 h-5 transition-transform duration-300"></i>
+          <i id="menu-icon-close" data-lucide="x" class="w-5 h-5 text-[#ff1e38] transition-transform duration-300 hidden"></i>
+        </button>
       </div>
+    </div>
 
-      <!-- Search icon -->
-      <button class="text-white hover:text-[#ff1e38] hover:rotate-90 transition-all p-1">
-        <i data-lucide="search" class="w-4 h-4"></i>
-      </button>
-    </nav>
+    <!-- Mobile Slide-down Menu Drawer (Overlay Below Header) -->
+    <div id="mobile-menu" class="md:hidden overflow-hidden absolute top-full left-0 right-0 w-full bg-black/95 backdrop-blur-2xl border-b border-red-500/30 shadow-2xl" style="max-height: 0px; opacity: 0; pointer-events: none;">
+      <div class="px-6 py-5 space-y-4">
+        <div class="flex flex-col space-y-2">
+          <a href="#home" onclick="closeMobileMenu()" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-gray-200 hover:text-white hover:bg-gradient-to-r hover:from-[#ff1e38]/20 hover:to-transparent border border-transparent hover:border-red-500/30 transition-all">
+            <i data-lucide="home" class="w-4 h-4 text-[#ff1e38]"></i>
+            <span>Trang chủ (Home)</span>
+          </a>
+          <a href="#profile-dj" onclick="navigateToDJProfile(event)" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-gray-200 hover:text-white hover:bg-gradient-to-r hover:from-[#ff1e38]/20 hover:to-transparent border border-transparent hover:border-red-500/30 transition-all">
+            <i data-lucide="disc" class="w-4 h-4 text-[#ff1e38]"></i>
+            <span>DJ Profile (K.lowvic)</span>
+          </a>
+          <a href="#profile-mc" onclick="closeMobileMenu()" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-gray-200 hover:text-white hover:bg-gradient-to-r hover:from-[#ff1e38]/20 hover:to-transparent border border-transparent hover:border-red-500/30 transition-all">
+            <i data-lucide="mic-2" class="w-4 h-4 text-[#ff1e38]"></i>
+            <span>MC Hype Profile</span>
+          </a>
+          <a href="#albums" onclick="closeMobileMenu()" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-gray-200 hover:text-white hover:bg-gradient-to-r hover:from-[#ff1e38]/20 hover:to-transparent border border-transparent hover:border-red-500/30 transition-all">
+            <i data-lucide="images" class="w-4 h-4 text-[#ff1e38]"></i>
+            <span>Photo Albums</span>
+          </a>
+        </div>
 
-    <!-- Top Right Curved Badge (230+ CONCERT EXPERIENCE) -->
+        <!-- Mobile Social & Contact Grid -->
+        <div class="pt-3 border-t border-red-500/20">
+          <span class="text-[11px] font-mono tracking-widest text-red-400 uppercase font-semibold block mb-2.5">Liên hệ & Booking:</span>
+          <div class="grid grid-cols-3 gap-2">
+            <a href="https://zalo.me/0824578947" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-xl bg-red-950/30 border border-red-500/30 text-xs font-semibold text-gray-200 hover:text-white hover:border-red-500 transition-all">
+              <svg class="w-3.5 h-3.5 text-[#ff1e38] fill-current" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.03 2 11c0 2.87 1.5 5.42 3.84 7.08L5 22l4.24-1.42C10.14 20.83 11.05 21 12 21c5.52 0 10-4.03 10-9s-4.48-10-10-10zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z"/>
+              </svg>
+              <span>Zalo</span>
+            </a>
+            <a href="mailto:teddy260798@gmail.com" class="flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-xl bg-red-950/30 border border-red-500/30 text-xs font-semibold text-gray-200 hover:text-white hover:border-red-500 transition-all">
+              <svg class="w-3.5 h-3.5 text-[#ff1e38]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <rect width="20" height="16" x="2" y="4" rx="2"/>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+              </svg>
+              <span>Email</span>
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-xl bg-red-950/30 border border-red-500/30 text-xs font-semibold text-gray-200 hover:text-white hover:border-red-500 transition-all">
+              <svg class="w-3.5 h-3.5 text-[#ff1e38]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+              </svg>
+              <span>Instagram</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
   </header>
 
   <!-- MAIN HERO SECTION -->
-  <main id="home" class="w-full flex-1 grid grid-cols-1 lg:grid-cols-12 items-center px-4 md:px-10 lg:px-14 relative z-10 py-4 my-auto">
+  <main id="home" class="w-full flex-1 grid grid-cols-1 lg:grid-cols-12 items-center px-4 md:px-10 lg:px-14 relative z-10 pt-6 sm:pt-8 pb-10 lg:py-6 lg:my-auto gap-8 lg:gap-4">
     
     <!-- Left Hero Typography & CTA -->
-    <div id="hero-text" class="lg:col-span-4 z-20 flex flex-col justify-center space-y-5 lg:pr-4">
-      <h1 class="text-4xl md:text-5xl lg:text-[3.2rem] font-black font-display text-white leading-[1.08] tracking-tight drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
+    <div id="hero-text" class="lg:col-span-4 z-20 flex flex-col justify-center space-y-4 sm:space-y-5 lg:pr-4">
+      <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-[3.2rem] font-black font-display text-white leading-[1.12] tracking-tight drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]">
         Experience the<br>
         <span class="text-[#ff1e38] drop-shadow-[0_0_20px_rgba(255,30,56,0.6)]">Ultimate DJ</span> Vibes
       </h1>
@@ -122,8 +226,8 @@
       </p>
 
       <!-- Action Buttons -->
-      <div class="flex items-center gap-4 pt-2">
-        <button id="attend-btn" class="bg-[#ff1e38] hover:bg-[#d90429] text-white font-extrabold text-sm tracking-wider uppercase px-8 py-3.5 rounded-2xl transition-all duration-300 shadow-lg shadow-red-600/40 hover:scale-105 active:scale-95 border border-red-400/30">
+      <div class="flex flex-wrap items-center gap-3 sm:gap-4 pt-2">
+        <button id="attend-btn" class="bg-[#ff1e38] hover:bg-[#d90429] text-white font-extrabold text-sm tracking-wider uppercase px-7 sm:px-8 py-3.5 rounded-2xl transition-all duration-300 shadow-lg shadow-red-600/40 hover:scale-105 active:scale-95 border border-red-400/30">
           Attend
         </button>
 
@@ -148,20 +252,20 @@
     </div>
 
     <!-- Center Mascot / DJ Element -->
-    <div id="center-dj" class="lg:col-span-5 flex flex-col items-center justify-center relative my-6 lg:my-0">
+    <div id="center-dj" class="lg:col-span-5 flex flex-col items-center justify-center relative my-4 sm:my-6 lg:my-0">
       
       <!-- Ambient Red Glow Behind Mascot -->
       <div class="absolute w-72 h-72 md:w-96 md:h-96 bg-gradient-to-tr from-[#ff1e38]/50 to-red-900/30 rounded-full blur-3xl -z-10 animate-pulse"></div>
 
       <!-- Main Mascot Image Frame -->
       <div class="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 flex items-center justify-center animate-float">
-        <div class="relative w-full h-full rounded-[40px] overflow-hidden p-2 bg-gradient-to-b from-red-500/30 to-black/80 backdrop-blur-md border-2 border-red-500/40 shadow-2xl">
+        <div class="relative w-full h-full rounded-[36px] sm:rounded-[40px] overflow-hidden p-2 bg-gradient-to-b from-red-500/30 to-black/80 backdrop-blur-md border-2 border-red-500/40 shadow-2xl">
           <img 
             src="anh/1789725557243_8977707432731428563_8977707432731428563_a3853ff02458df8dcb80ea06661ec9a9.jpg" 
             alt="DJ Master" 
-            class="w-full h-full object-cover rounded-[34px] hover:scale-105 transition-transform duration-700"
+            class="w-full h-full object-cover rounded-[30px] sm:rounded-[34px] hover:scale-105 transition-transform duration-700"
           />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-[34px]"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent rounded-[30px] sm:rounded-[34px]"></div>
         </div>
 
         <!-- DJ Headphones / Badge Accent -->
@@ -172,15 +276,15 @@
       </div>
 
       <!-- Turntable Controller Base -->
-      <div class="relative -mt-8 z-20 w-80 md:w-96 bg-[#110e10] rounded-2xl p-3 shadow-2xl border border-red-500/30 flex items-center justify-between">
+      <div class="relative -mt-8 z-20 w-full max-w-[340px] sm:max-w-sm md:max-w-md bg-[#110e10] rounded-2xl p-3 shadow-2xl border border-red-500/30 flex items-center justify-between mx-auto">
         <!-- Turntable Disk 1 -->
         <div class="flex items-center gap-3">
           <div id="turntable-disk" class="w-12 h-12 rounded-full bg-gradient-to-tr from-gray-950 via-gray-900 to-black border-2 border-red-600/60 flex items-center justify-center spin-slow paused shadow-inner">
             <div class="w-4 h-4 rounded-full bg-[#ff1e38] border-2 border-white shadow-[0_0_8px_#ff1e38]"></div>
           </div>
           <div>
-            <div class="text-[20px] text-red-400" style="font-family: 'Courier New', monospace;">DJ/MC</div>
-            <div class="text-[31px] text-white font-bold tracking-wide" style="font-family: 'Courier New', monospace;">K.lowvic</div>
+            <div class="text-[18px] sm:text-[20px] text-red-400" style="font-family: 'Courier New', monospace;">DJ/MC</div>
+            <div class="text-2xl sm:text-[28px] md:text-[31px] text-white font-bold tracking-wide" style="font-family: 'Courier New', monospace;">K.lowvic</div>
           </div>
         </div>
 
@@ -200,10 +304,10 @@
     </div>
 
     <!-- Right Side Quotes Section -->
-    <div class="lg:col-span-3 flex flex-col items-center lg:items-end justify-center space-y-4 z-20">
+    <div class="lg:col-span-3 flex flex-col items-center lg:items-end justify-center space-y-3.5 sm:space-y-4 z-20">
       
       <!-- Quote 1 -->
-      <div class="w-full max-w-xs bg-black/60 backdrop-blur-md p-4 rounded-2xl border border-red-500/30 shadow-lg shadow-red-950/40 hover:border-red-500/70 hover:scale-105 transition-all duration-300">
+      <div class="w-full max-w-[340px] sm:max-w-sm lg:max-w-xs bg-black/60 backdrop-blur-md p-4 rounded-2xl border border-red-500/30 shadow-lg shadow-red-950/40 hover:border-red-500/70 hover:scale-105 transition-all duration-300">
         <div class="flex items-center gap-2 mb-1.5">
           <span class="w-2 h-2 rounded-full bg-[#ff1e38] shadow-[0_0_8px_#ff1e38]"></span>
           <span class="text-[10px] font-mono tracking-widest text-red-400 uppercase font-semibold">Motto</span>
@@ -214,7 +318,7 @@
       </div>
 
       <!-- Quote 2 -->
-      <div class="w-full max-w-xs bg-gradient-to-br from-black/80 to-[#1e070c]/70 backdrop-blur-md p-4 rounded-2xl border border-red-500/30 shadow-lg shadow-red-950/40 hover:border-red-500/70 hover:scale-105 transition-all duration-300">
+      <div class="w-full max-w-[340px] sm:max-w-sm lg:max-w-xs bg-gradient-to-br from-black/80 to-[#1e070c]/70 backdrop-blur-md p-4 rounded-2xl border border-red-500/30 shadow-lg shadow-red-950/40 hover:border-red-500/70 hover:scale-105 transition-all duration-300">
         <div class="flex items-center gap-2 mb-1.5">
           <span class="w-2 h-2 rounded-full bg-[#ff1e38] shadow-[0_0_8px_#ff1e38]"></span>
           <span class="text-[10px] font-mono tracking-widest text-red-400 uppercase font-semibold">Vibe</span>
@@ -225,7 +329,7 @@
       </div>
 
       <!-- Quote 3 -->
-      <div class="w-full max-w-xs bg-black/60 backdrop-blur-md p-4 rounded-2xl border border-red-500/30 shadow-lg shadow-red-950/40 hover:border-red-500/70 hover:scale-105 transition-all duration-300">
+      <div class="w-full max-w-[340px] sm:max-w-sm lg:max-w-xs bg-black/60 backdrop-blur-md p-4 rounded-2xl border border-red-500/30 shadow-lg shadow-red-950/40 hover:border-red-500/70 hover:scale-105 transition-all duration-300">
         <div class="flex items-center gap-2 mb-1.5">
           <span class="w-2 h-2 rounded-full bg-[#ff1e38] shadow-[0_0_8px_#ff1e38]"></span>
           <span class="text-[10px] font-mono tracking-widest text-red-400 uppercase font-semibold">Nightfall</span>
@@ -242,11 +346,11 @@
   </main>
 
   <!-- BOTTOM CARDS & FOOTER BAR -->
-  <footer class="w-full px-4 md:px-10 lg:px-14 pb-6 pt-2 z-20">
+  <footer class="w-full px-4 md:px-10 lg:px-14 pb-8 pt-4 z-20">
     <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
       
       <!-- Bottom Left: SERVICES Section -->
-      <div id="bottom-left-card" class="md:col-span-5 bg-black/85 backdrop-blur-md text-white p-6 rounded-[36px] bottom-curve-left shadow-2xl flex items-center justify-between gap-4 border-2 border-red-600/50 shadow-red-950/50">
+      <div id="bottom-left-card" class="order-1 md:order-none md:col-span-5 bg-black/85 backdrop-blur-md text-white p-5 sm:p-6 rounded-[28px] sm:rounded-[36px] bottom-curve-left shadow-2xl flex items-center justify-between gap-4 border-2 border-red-600/50 shadow-red-950/50">
         <div class="flex-1 space-y-2">
           <h3 class="font-display font-extrabold text-base tracking-wider uppercase border-b border-red-500/30 pb-1 text-[#ff1e38]">
             Services
@@ -269,7 +373,7 @@
       </div>
 
       <!-- Center Copyright Bar -->
-      <div class="md:col-span-2 flex flex-col items-center justify-center py-2 text-center">
+      <div class="order-3 md:order-none md:col-span-2 flex flex-col items-center justify-center py-2 text-center">
         <div class="flex items-center gap-4 text-[#ff1e38] mb-1">
           <a href="https://zalo.me/0824578947" target="_blank" rel="noopener noreferrer" class="hover:scale-125 transition-transform" title="Zalo">
             <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -282,6 +386,13 @@
               <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
             </svg>
           </a>
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="hover:scale-125 transition-transform" title="Instagram">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+              <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+            </svg>
+          </a>
         </div>
         <p class="text-[10px] font-black tracking-widest text-red-500 uppercase">
           DJ-MC K.lowvic© All Right Reserve
@@ -289,7 +400,7 @@
       </div>
 
       <!-- Bottom Right: EVENTS SECTION -->
-      <div id="bottom-right-card" class="md:col-span-5 bg-black/85 backdrop-blur-md text-white p-6 rounded-[36px] bottom-curve-right shadow-2xl flex items-center justify-between gap-4 border-2 border-red-600/50 shadow-red-950/50">
+      <div id="bottom-right-card" class="order-2 md:order-none md:col-span-5 bg-black/85 backdrop-blur-md text-white p-5 sm:p-6 rounded-[28px] sm:rounded-[36px] bottom-curve-right shadow-2xl flex items-center justify-between gap-4 border-2 border-red-600/50 shadow-red-950/50">
         <!-- Thumbnail Image -->
         <div class="w-20 h-24 rounded-2xl overflow-hidden shadow-lg border-2 border-red-500/50 flex-shrink-0">
           <img 
@@ -315,8 +426,13 @@
   </footer>
 
   <!-- ==================== SECTION 2: DJ PROFILE ==================== -->
-  <section id="profile-dj" class="w-full min-h-screen py-16 px-4 md:px-10 lg:px-14 relative z-20 border-t border-red-500/20 bg-gradient-to-b from-black/90 via-[#0e070a]/95 to-black">
-    <div class="max-w-7xl mx-auto">
+  <section id="profile-dj" class="w-full min-h-screen py-16 px-4 md:px-10 lg:px-14 relative z-20 border-t border-red-500/20 bg-black overflow-hidden">
+    <!-- Warm Yellow Neon Sweep Beam -->
+    <div id="dj-neon-beam" class="dj-neon-beam" style="left: 0%; opacity: 0;"></div>
+
+    <!-- Section Content (Wipe Revealed Behind Neon Beam) -->
+    <div id="profile-dj-inner" class="w-full relative z-10" style="will-change: clip-path;">
+      <div class="max-w-7xl mx-auto">
       
       <!-- Section Header -->
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b border-red-500/20 pb-6">
@@ -339,7 +455,7 @@
         
         <!-- Left Column: Portrait Showcase -->
         <div class="lg:col-span-5 flex flex-col items-center">
-          <div class="relative w-full max-w-md h-[480px] rounded-[36px] overflow-hidden border-2 border-red-500/40 shadow-2xl shadow-red-950/60 group">
+          <div class="relative w-full max-w-md h-[360px] sm:h-[440px] md:h-[480px] rounded-3xl sm:rounded-[36px] overflow-hidden border-2 border-red-500/40 shadow-2xl shadow-red-950/60 group">
             <img 
               src="anh/IM5A8867.jpeg" 
               alt="K.lowvic Portrait" 
@@ -363,7 +479,7 @@
         <div class="lg:col-span-7 flex flex-col justify-between space-y-6">
           
           <!-- Bio Box -->
-          <div class="bg-black/70 backdrop-blur-md p-6 md:p-8 rounded-[32px] border border-red-500/30 shadow-xl">
+          <div class="bg-black/70 backdrop-blur-md p-5 sm:p-8 rounded-2xl sm:rounded-[32px] border border-red-500/30 shadow-xl">
             <h3 class="text-xl font-bold text-white font-display mb-3 flex items-center gap-3">
               <i data-lucide="disc" class="w-5 h-5 text-[#ff1e38]"></i>
               Giới thiệu DJ
@@ -377,18 +493,18 @@
           </div>
 
           <!-- Highlight Numbers Grid -->
-          <div class="grid grid-cols-3 gap-4">
-            <div class="bg-black/70 backdrop-blur-md p-5 rounded-2xl border border-red-500/20 text-center hover:border-red-500/60 transition-colors">
-              <div class="text-3xl font-extrabold text-[#ff1e38] font-display">5+</div>
-              <div class="text-[11px] text-gray-400 uppercase tracking-wider mt-1 font-semibold">Năm kinh nghiệm</div>
+          <div class="grid grid-cols-3 gap-2.5 sm:gap-4">
+            <div class="bg-black/70 backdrop-blur-md p-3 sm:p-5 rounded-2xl border border-red-500/20 text-center hover:border-red-500/60 transition-colors">
+              <div class="text-2xl sm:text-3xl font-extrabold text-[#ff1e38] font-display">5+</div>
+              <div class="text-[10px] sm:text-[11px] text-gray-400 uppercase tracking-wider mt-1 font-semibold leading-tight">Năm kinh nghiệm</div>
             </div>
-            <div class="bg-black/70 backdrop-blur-md p-5 rounded-2xl border border-red-500/20 text-center hover:border-red-500/60 transition-colors">
-              <div class="text-3xl font-extrabold text-[#ff1e38] font-display">20+</div>
-              <div class="text-[11px] text-gray-400 uppercase tracking-wider mt-1 font-semibold">Show diễn lớn</div>
+            <div class="bg-black/70 backdrop-blur-md p-3 sm:p-5 rounded-2xl border border-red-500/20 text-center hover:border-red-500/60 transition-colors">
+              <div class="text-2xl sm:text-3xl font-extrabold text-[#ff1e38] font-display">20+</div>
+              <div class="text-[10px] sm:text-[11px] text-gray-400 uppercase tracking-wider mt-1 font-semibold leading-tight">Show diễn lớn</div>
             </div>
-            <div class="bg-black/70 backdrop-blur-md p-5 rounded-2xl border border-red-500/20 text-center hover:border-red-500/60 transition-colors">
-              <div class="text-3xl font-extrabold text-[#ff1e38] font-display">100K+</div>
-              <div class="text-[11px] text-gray-400 uppercase tracking-wider mt-1 font-semibold">Khán giả hòa nhịp</div>
+            <div class="bg-black/70 backdrop-blur-md p-3 sm:p-5 rounded-2xl border border-red-500/20 text-center hover:border-red-500/60 transition-colors">
+              <div class="text-2xl sm:text-3xl font-extrabold text-[#ff1e38] font-display">100K+</div>
+              <div class="text-[10px] sm:text-[11px] text-gray-400 uppercase tracking-wider mt-1 font-semibold leading-tight">Khán giả hòa nhịp</div>
             </div>
           </div>
 
@@ -431,6 +547,7 @@
       </div>
 
     </div>
+    </div>
   </section>
 
   <!-- ==================== SECTION 3: MC HYPE PROFILE ==================== -->
@@ -460,7 +577,7 @@
         <div class="lg:col-span-7 flex flex-col justify-between space-y-6 order-2 lg:order-1">
           
           <!-- Bio Box -->
-          <div class="bg-black/70 backdrop-blur-md p-6 md:p-8 rounded-[32px] border border-red-500/30 shadow-xl">
+          <div class="bg-black/70 backdrop-blur-md p-5 sm:p-8 rounded-2xl sm:rounded-[32px] border border-red-500/30 shadow-xl">
             <h3 class="text-xl font-bold text-white font-display mb-3 flex items-center gap-3">
               <i data-lucide="mic-2" class="w-5 h-5 text-[#ff1e38]"></i>
               Giới thiệu MC Hype
@@ -474,18 +591,18 @@
           </div>
 
           <!-- Highlight Numbers Grid -->
-          <div class="grid grid-cols-3 gap-4">
-            <div class="bg-black/70 backdrop-blur-md p-5 rounded-2xl border border-red-500/20 text-center hover:border-red-500/60 transition-colors">
-              <div class="text-3xl font-extrabold text-[#ff1e38] font-display">300+</div>
-              <div class="text-[11px] text-gray-400 uppercase tracking-wider mt-1 font-semibold">Đêm diễn cuồng nhiệt</div>
+          <div class="grid grid-cols-3 gap-2.5 sm:gap-4">
+            <div class="bg-black/70 backdrop-blur-md p-3 sm:p-5 rounded-2xl border border-red-500/20 text-center hover:border-red-500/60 transition-colors">
+              <div class="text-2xl sm:text-3xl font-extrabold text-[#ff1e38] font-display">300+</div>
+              <div class="text-[10px] sm:text-[11px] text-gray-400 uppercase tracking-wider mt-1 font-semibold leading-tight">Đêm diễn cuồng nhiệt</div>
             </div>
-            <div class="bg-black/70 backdrop-blur-md p-5 rounded-2xl border border-red-500/20 text-center hover:border-red-500/60 transition-colors">
-              <div class="text-3xl font-extrabold text-[#ff1e38] font-display">100%</div>
-              <div class="text-[11px] text-gray-400 uppercase tracking-wider mt-1 font-semibold">Bùng nổ năng lượng</div>
+            <div class="bg-black/70 backdrop-blur-md p-3 sm:p-5 rounded-2xl border border-red-500/20 text-center hover:border-red-500/60 transition-colors">
+              <div class="text-2xl sm:text-3xl font-extrabold text-[#ff1e38] font-display">100%</div>
+              <div class="text-[10px] sm:text-[11px] text-gray-400 uppercase tracking-wider mt-1 font-semibold leading-tight">Bùng nổ năng lượng</div>
             </div>
-            <div class="bg-black/70 backdrop-blur-md p-5 rounded-2xl border border-red-500/20 text-center hover:border-red-500/60 transition-colors">
-              <div class="text-3xl font-extrabold text-[#ff1e38] font-display">50+</div>
-              <div class="text-[11px] text-gray-400 uppercase tracking-wider mt-1 font-semibold">Festival & Event</div>
+            <div class="bg-black/70 backdrop-blur-md p-3 sm:p-5 rounded-2xl border border-red-500/20 text-center hover:border-red-500/60 transition-colors">
+              <div class="text-2xl sm:text-3xl font-extrabold text-[#ff1e38] font-display">50+</div>
+              <div class="text-[10px] sm:text-[11px] text-gray-400 uppercase tracking-wider mt-1 font-semibold leading-tight">Festival & Event</div>
             </div>
           </div>
 
@@ -527,7 +644,7 @@
 
         <!-- Right Column: Portrait Showcase -->
         <div class="lg:col-span-5 flex flex-col items-center order-1 lg:order-2">
-          <div class="relative w-full max-w-md h-[480px] rounded-[36px] overflow-hidden border-2 border-red-500/40 shadow-2xl shadow-red-950/60 group">
+          <div class="relative w-full max-w-md h-[360px] sm:h-[440px] md:h-[480px] rounded-3xl sm:rounded-[36px] overflow-hidden border-2 border-red-500/40 shadow-2xl shadow-red-950/60 group">
             <img 
               src="anh/ChatGPT Image 17_41_14 18 thg 9, 2026.png" 
               alt="MC Hype Portrait" 
@@ -560,7 +677,7 @@
     <div class="max-w-7xl mx-auto">
       
       <!-- Section Header -->
-      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b border-red-500/20 pb-6">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 border-b border-red-500/20 pb-6">
         <div>
           <span class="text-xs font-mono tracking-widest text-[#ff1e38] uppercase flex items-center gap-2 mb-2">
             <span class="w-2 h-2 rounded-full bg-[#ff1e38] animate-ping"></span>
@@ -570,9 +687,15 @@
             PHOTO <span class="text-[#ff1e38]">ALBUM</span>
           </h2>
         </div>
-        <p class="text-sm text-gray-400 max-w-md mt-4 md:mt-0 leading-relaxed font-light">
-          Bộ sưu tập những khoảnh khắc bùng nổ năng lượng, ánh sáng cuồng nhiệt và cảm xúc thăng hoa tại các sân khấu sự kiện.
-        </p>
+        <div class="mt-4 md:mt-0 flex flex-col md:items-end gap-2">
+          <p class="text-sm text-gray-400 max-w-md leading-relaxed font-light">
+            Bộ sưu tập những khoảnh khắc bùng nổ năng lượng, ánh sáng cuồng nhiệt và cảm xúc thăng hoa tại các sân khấu sự kiện.
+          </p>
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-950/40 border border-red-500/30 text-xs text-red-300 font-mono">
+            <i data-lucide="zoom-in" class="w-3.5 h-3.5 text-[#ff1e38] animate-pulse"></i>
+            <span>Nhấp đúp (Double tap) vào ảnh để phóng to nguyên kích thước</span>
+          </div>
+        </div>
       </div>
 
       <!-- Albums Expanding Accordion Slider (Bố cục dải thanh mở rộng như mẫu) -->
@@ -580,7 +703,7 @@
         <div id="accordion-container" class="accordion-track">
           
           <!-- Card 1 (Active by default) -->
-          <div class="accordion-card active" data-index="0" onclick="selectAccordionCard(0)">
+          <div class="accordion-card active" data-index="0" onclick="handleCardClick(0)" ondblclick="openLightbox(0)" title="Nhấp để chọn • Nhấp đúp để phóng to">
             <img src="anh/albums/1.jpg" alt="Showcase 1" class="w-full h-full object-cover object-center">
             <div class="card-caption">
               <h4 class="text-lg font-bold text-white font-display">K.lowvic On Stage</h4>
@@ -589,7 +712,7 @@
           </div>
 
           <!-- Card 2 -->
-          <div class="accordion-card" data-index="1" onclick="selectAccordionCard(1)">
+          <div class="accordion-card" data-index="1" onclick="handleCardClick(1)" ondblclick="openLightbox(1)" title="Nhấp để chọn • Nhấp đúp để phóng to">
             <img src="anh/albums/2.jpg" alt="Showcase 2" class="w-full h-full object-cover object-center">
             <div class="card-caption">
               <h4 class="text-lg font-bold text-white font-display">Festival Energy</h4>
@@ -598,7 +721,7 @@
           </div>
 
           <!-- Card 3 -->
-          <div class="accordion-card" data-index="2" onclick="selectAccordionCard(2)">
+          <div class="accordion-card" data-index="2" onclick="handleCardClick(2)" ondblclick="openLightbox(2)" title="Nhấp để chọn • Nhấp đúp để phóng to">
             <img src="anh/albums/3.jpg" alt="Showcase 3" class="w-full h-full object-cover object-center">
             <div class="card-caption">
               <h4 class="text-lg font-bold text-white font-display">Crowd Connection</h4>
@@ -607,7 +730,7 @@
           </div>
 
           <!-- Card 4 -->
-          <div class="accordion-card" data-index="3" onclick="selectAccordionCard(3)">
+          <div class="accordion-card" data-index="3" onclick="handleCardClick(3)" ondblclick="openLightbox(3)" title="Nhấp để chọn • Nhấp đúp để phóng to">
             <img src="anh/albums/4.jpg" alt="Showcase 4" class="w-full h-full object-cover object-center">
             <div class="card-caption">
               <h4 class="text-lg font-bold text-white font-display">Sound & Lights</h4>
@@ -616,7 +739,7 @@
           </div>
 
           <!-- Card 5 -->
-          <div class="accordion-card" data-index="4" onclick="selectAccordionCard(4)">
+          <div class="accordion-card" data-index="4" onclick="handleCardClick(4)" ondblclick="openLightbox(4)" title="Nhấp để chọn • Nhấp đúp để phóng to">
             <img src="anh/albums/5.jpg" alt="Showcase 5" class="w-full h-full object-cover object-center">
             <div class="card-caption">
               <h4 class="text-lg font-bold text-white font-display">Night Vibe</h4>
@@ -625,7 +748,7 @@
           </div>
 
           <!-- Card 6 -->
-          <div class="accordion-card" data-index="5" onclick="selectAccordionCard(5)">
+          <div class="accordion-card" data-index="5" onclick="handleCardClick(5)" ondblclick="openLightbox(5)" title="Nhấp để chọn • Nhấp đúp để phóng to">
             <img src="anh/albums/6.jpg" alt="Showcase 6" class="w-full h-full object-cover object-center">
             <div class="card-caption">
               <h4 class="text-lg font-bold text-white font-display">Bass Drop Moment</h4>
@@ -634,7 +757,7 @@
           </div>
 
           <!-- Card 7 -->
-          <div class="accordion-card" data-index="6" onclick="selectAccordionCard(6)">
+          <div class="accordion-card" data-index="6" onclick="handleCardClick(6)" ondblclick="openLightbox(6)" title="Nhấp để chọn • Nhấp đúp để phóng to">
             <img src="anh/albums/7.jpg" alt="Showcase 7" class="w-full h-full object-cover object-center">
             <div class="card-caption">
               <h4 class="text-lg font-bold text-white font-display">Club Tour Highlights</h4>
@@ -643,7 +766,7 @@
           </div>
 
           <!-- Card 8 -->
-          <div class="accordion-card" data-index="7" onclick="selectAccordionCard(7)">
+          <div class="accordion-card" data-index="7" onclick="handleCardClick(7)" ondblclick="openLightbox(7)" title="Nhấp để chọn • Nhấp đúp để phóng to">
             <img src="anh/albums/8.jpg" alt="Showcase 8" class="w-full h-full object-cover object-center">
             <div class="card-caption">
               <h4 class="text-lg font-bold text-white font-display">Hype The Beat</h4>
@@ -652,7 +775,7 @@
           </div>
 
           <!-- Card 9 -->
-          <div class="accordion-card" data-index="8" onclick="selectAccordionCard(8)">
+          <div class="accordion-card" data-index="8" onclick="handleCardClick(8)" ondblclick="openLightbox(8)" title="Nhấp để chọn • Nhấp đúp để phóng to">
             <img src="anh/albums/9.jpg" alt="Showcase 9" class="w-full h-full object-cover object-center">
             <div class="card-caption">
               <h4 class="text-lg font-bold text-white font-display">Unstoppable Emotion</h4>
@@ -693,12 +816,86 @@
     </div>
   </section>
 
-  <!-- Photo Lightbox Modal -->
-  <div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl hidden flex items-center justify-center p-4" onclick="closeLightbox()">
-    <button class="absolute top-6 right-6 w-12 h-12 rounded-full bg-red-600/30 border border-red-500 text-white flex items-center justify-center hover:bg-[#ff1e38] hover:scale-110 transition-all">
-      <i data-lucide="x" class="w-6 h-6"></i>
+  <!-- Search Modal -->
+  <div id="search-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl hidden items-start justify-center pt-24 px-4" onclick="closeSearchModal(event)">
+    <div class="bg-[#110e10] border border-red-500/40 rounded-3xl w-full max-w-lg p-5 shadow-2xl shadow-red-950/80" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between pb-3 border-b border-red-500/20">
+        <div class="flex items-center gap-3 flex-1">
+          <i data-lucide="search" class="w-5 h-5 text-[#ff1e38]"></i>
+          <input id="search-input" type="text" placeholder="Tìm kiếm nhanh (DJ, MC, Albums, Contact...)" class="bg-transparent text-white placeholder-gray-500 text-sm focus:outline-none w-full" oninput="handleSearch(this.value)">
+        </div>
+        <button onclick="closeSearchModal()" class="text-gray-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div id="search-results" class="mt-4 space-y-2">
+        <a href="#home" onclick="closeSearchModal()" class="flex items-center justify-between p-3 rounded-xl hover:bg-red-950/40 border border-transparent hover:border-red-500/30 transition-all text-sm">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="home" class="w-4 h-4 text-[#ff1e38]"></i>
+            <span class="text-gray-200">Trang chủ & Stage</span>
+          </div>
+          <span class="text-xs text-red-400 font-mono">#home</span>
+        </a>
+        <a href="#profile-dj" onclick="closeSearchModal(); navigateToDJProfile(event);" class="flex items-center justify-between p-3 rounded-xl hover:bg-red-950/40 border border-transparent hover:border-red-500/30 transition-all text-sm">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="disc" class="w-4 h-4 text-[#ff1e38]"></i>
+            <span class="text-gray-200">DJ K.lowvic Profile</span>
+          </div>
+          <span class="text-xs text-red-400 font-mono">#profile-dj</span>
+        </a>
+        <a href="#profile-mc" onclick="closeSearchModal()" class="flex items-center justify-between p-3 rounded-xl hover:bg-red-950/40 border border-transparent hover:border-red-500/30 transition-all text-sm">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="mic-2" class="w-4 h-4 text-[#ff1e38]"></i>
+            <span class="text-gray-200">MC Hype Teddy Profile</span>
+          </div>
+          <span class="text-xs text-red-400 font-mono">#profile-mc</span>
+        </a>
+        <a href="#albums" onclick="closeSearchModal()" class="flex items-center justify-between p-3 rounded-xl hover:bg-red-950/40 border border-transparent hover:border-red-500/30 transition-all text-sm">
+          <div class="flex items-center gap-2.5">
+            <i data-lucide="images" class="w-4 h-4 text-[#ff1e38]"></i>
+            <span class="text-gray-200">Photo Albums (Khoảnh khắc biểu diễn)</span>
+          </div>
+          <span class="text-xs text-red-400 font-mono">#albums</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Photo Lightbox Modal (Phóng to nguyên kích thước) -->
+  <div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-2xl hidden items-center justify-center p-3 sm:p-6 select-none" onclick="closeLightbox(event)">
+    
+    <!-- Top Bar with Counter & Close Button -->
+    <div class="absolute top-4 left-4 right-4 sm:top-6 sm:left-6 sm:right-6 flex items-center justify-between z-50 pointer-events-none">
+      <span id="lightbox-counter" class="pointer-events-auto px-4 py-1.5 rounded-full bg-black/80 border border-red-500/40 text-red-400 font-mono text-xs font-semibold shadow-lg">
+        1 / 9
+      </span>
+      <button onclick="closeLightbox()" class="pointer-events-auto w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-red-600/40 border border-red-500 text-white flex items-center justify-center hover:bg-[#ff1e38] hover:scale-110 active:scale-95 transition-all shadow-xl" title="Đóng (Esc)">
+        <i data-lucide="x" class="w-6 h-6"></i>
+      </button>
+    </div>
+
+    <!-- Prev Button -->
+    <button onclick="event.stopPropagation(); prevLightboxImg()" class="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-black/80 border border-red-500/40 text-white flex items-center justify-center hover:bg-[#ff1e38] hover:border-red-500 hover:scale-110 active:scale-95 transition-all shadow-2xl z-50" title="Ảnh trước">
+      <i data-lucide="chevron-left" class="w-6 h-6"></i>
     </button>
-    <img id="lightbox-img" src="" alt="Enlarged Showcase" class="max-w-full max-h-[90vh] rounded-3xl object-contain border-2 border-red-500/40 shadow-2xl shadow-red-950/80" onclick="event.stopPropagation()">
+
+    <!-- Next Button -->
+    <button onclick="event.stopPropagation(); nextLightboxImg()" class="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-black/80 border border-red-500/40 text-white flex items-center justify-center hover:bg-[#ff1e38] hover:border-red-500 hover:scale-110 active:scale-95 transition-all shadow-2xl z-50" title="Ảnh tiếp theo">
+      <i data-lucide="chevron-right" class="w-6 h-6"></i>
+    </button>
+
+    <!-- Image Container -->
+    <div class="relative max-w-full max-h-[85vh] flex flex-col items-center justify-center" onclick="event.stopPropagation()">
+      <img id="lightbox-img" src="" alt="Enlarged Showcase" class="max-w-[94vw] sm:max-w-[85vw] max-h-[72vh] sm:max-h-[78vh] rounded-2xl sm:rounded-3xl object-contain border-2 border-red-500/50 shadow-[0_0_50px_rgba(255,30,56,0.4)] transition-all duration-300">
+      
+      <!-- Caption -->
+      <div class="mt-3 sm:mt-4 text-center px-4">
+        <h4 id="lightbox-title" class="text-base sm:text-xl font-bold text-white font-display tracking-wide"></h4>
+        <p id="lightbox-caption" class="text-xs sm:text-sm text-red-400 font-mono mt-0.5"></p>
+        <span class="text-[10px] text-gray-400 font-mono mt-1 block">Chạm bên ngoài hoặc nhấn Esc để đóng</span>
+      </div>
+    </div>
+
   </div>
 
   <!-- Audio Element -->
@@ -711,6 +908,288 @@
   <script src="script.js"></script>
   <script>
     lucide.createIcons();
+
+    // Mobile Drawer Navigation (Smooth Dynamic Slide Down/Up)
+    function toggleMobileMenu(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      const menu = document.getElementById('mobile-menu');
+      const btn = document.getElementById('mobile-menu-btn');
+      const iconBars = document.getElementById('menu-icon-bars');
+      const iconClose = document.getElementById('menu-icon-close');
+      if (!menu) return;
+
+      const isOpen = menu.classList.contains('open');
+      if (!isOpen) {
+        // OPEN MENU
+        menu.classList.add('open');
+        const header = document.getElementById('main-header');
+        if (header) header.style.transform = 'translateY(0)';
+        lastScrollY = window.scrollY;
+
+        const targetH = (menu.scrollHeight || 420) + 'px';
+        menu.style.maxHeight = targetH;
+        menu.style.opacity = '1';
+        menu.style.pointerEvents = 'auto';
+
+        if (iconBars) iconBars.classList.add('hidden');
+        if (iconClose) iconClose.classList.remove('hidden');
+        if (btn) btn.classList.add('border-red-500', 'bg-red-950/40');
+      } else {
+        // CLOSE MENU
+        closeMobileMenu();
+      }
+    }
+
+    function closeMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const btn = document.getElementById('mobile-menu-btn');
+      const iconBars = document.getElementById('menu-icon-bars');
+      const iconClose = document.getElementById('menu-icon-close');
+      if (menu && menu.classList.contains('open')) {
+        menu.classList.remove('open');
+        menu.style.maxHeight = '0px';
+        menu.style.opacity = '0';
+        menu.style.pointerEvents = 'none';
+
+        if (iconBars) iconBars.classList.remove('hidden');
+        if (iconClose) iconClose.classList.add('hidden');
+        if (btn) btn.classList.remove('border-red-500', 'bg-red-950/40');
+      }
+    }
+
+    // Close mobile menu when tapping outside header
+    document.addEventListener('click', (e) => {
+      const menu = document.getElementById('mobile-menu');
+      const btn = document.getElementById('mobile-menu-btn');
+      const header = document.getElementById('main-header');
+      if (!menu || !menu.classList.contains('open')) return;
+
+      // Do nothing if clicked inside burger button
+      if (btn && btn.contains(e.target)) return;
+
+      // Close if clicked anywhere outside the header
+      if (header && !header.contains(e.target)) {
+        closeMobileMenu();
+      }
+    });
+
+    // Handle screen resize
+    window.addEventListener('resize', () => {
+      const menu = document.getElementById('mobile-menu');
+      if (window.innerWidth >= 768) {
+        closeMobileMenu();
+      } else if (menu && menu.classList.contains('open')) {
+        menu.style.maxHeight = (menu.scrollHeight || 420) + 'px';
+      }
+    });
+
+    // =========================================================================
+    // DJ Profile Transition: Black Screen + Warm Yellow Neon LED Sweep (0.5s)
+    // =========================================================================
+    let isDJNeonAnimating = false;
+    let djProfileRevealedOnce = false;
+
+    function playDJProfileReveal() {
+      if (isDJNeonAnimating) return;
+      const beam = document.getElementById('dj-neon-beam');
+      const inner = document.getElementById('profile-dj-inner');
+      if (!beam || !inner) return;
+
+      isDJNeonAnimating = true;
+
+      // Kill any previous tweens
+      gsap.killTweensOf([beam, inner]);
+
+      // Step 1: Initial black screen (content clipped completely) + neon beam at 0%
+      const initialClip = 'inset(0 100% 0 0)';
+      inner.style.clipPath = initialClip;
+      inner.style.webkitClipPath = initialClip;
+      beam.style.left = '0%';
+      beam.style.opacity = '1';
+
+      // Step 2: Smooth 0.5s sweep from left (0%) to right (100%)
+      const sweepAnim = { progress: 0 };
+
+      gsap.to(sweepAnim, {
+        progress: 100,
+        duration: 0.5,
+        ease: 'power1.inOut',
+        onUpdate: () => {
+          const p = sweepAnim.progress;
+          beam.style.left = p + '%';
+          const clipVal = `inset(0 ${100 - p}% 0 0)`;
+          inner.style.clipPath = clipVal;
+          inner.style.webkitClipPath = clipVal;
+        },
+        onComplete: () => {
+          // Content is fully revealed, clear clipPath
+          inner.style.clipPath = 'none';
+          inner.style.webkitClipPath = 'none';
+
+          // Fade out neon beam softly
+          gsap.to(beam, {
+            opacity: 0,
+            duration: 0.2,
+            onComplete: () => {
+              isDJNeonAnimating = false;
+            }
+          });
+        }
+      });
+    }
+
+    // Function called when user clicks DJ Profile link anywhere
+    function navigateToDJProfile(e) {
+      if (e) e.preventDefault();
+      closeMobileMenu();
+
+      const target = document.getElementById('profile-dj');
+      if (!target) return;
+
+      // Immediately blackout profile-dj while scrolling to it
+      const beam = document.getElementById('dj-neon-beam');
+      const inner = document.getElementById('profile-dj-inner');
+      if (inner) {
+        inner.style.clipPath = 'inset(0 100% 0 0)';
+        inner.style.webkitClipPath = 'inset(0 100% 0 0)';
+      }
+      if (beam) {
+        beam.style.left = '0%';
+        beam.style.opacity = '1';
+      }
+
+      // Smooth scroll to section
+      const targetPos = target.getBoundingClientRect().top + window.scrollY - 60;
+      window.scrollTo({
+        top: targetPos,
+        behavior: 'smooth'
+      });
+
+      // Trigger 0.5s neon sweep as soon as user arrives
+      let hasTriggered = false;
+      const checkArrival = () => {
+        const rect = target.getBoundingClientRect();
+        if (Math.abs(rect.top - 60) < 50 || rect.top <= 80) {
+          if (!hasTriggered) {
+            hasTriggered = true;
+            window.removeEventListener('scroll', checkArrival);
+            setTimeout(playDJProfileReveal, 80);
+          }
+        }
+      };
+
+      window.addEventListener('scroll', checkArrival, { passive: true });
+
+      // Fallback in case already at position or smooth scroll finishes quickly
+      setTimeout(() => {
+        if (!hasTriggered) {
+          hasTriggered = true;
+          window.removeEventListener('scroll', checkArrival);
+          playDJProfileReveal();
+        }
+      }, 550);
+    }
+
+    // IntersectionObserver to also trigger when user naturally scrolls down into DJ Profile
+    const djSectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !djProfileRevealedOnce) {
+          djProfileRevealedOnce = true;
+          playDJProfileReveal();
+        }
+      });
+    }, {
+      threshold: 0.2
+    });
+
+    const djSectionEl = document.getElementById('profile-dj');
+    if (djSectionEl) {
+      djSectionObserver.observe(djSectionEl);
+    }
+
+    // Smart Auto-Hide Header on Scroll Down, Reveal on Scroll Up
+    const mainHeader = document.getElementById('main-header');
+    let lastScrollY = window.scrollY;
+
+    window.addEventListener('scroll', () => {
+      if (!mainHeader) return;
+      const menu = document.getElementById('mobile-menu');
+      // If mobile menu is open, DO NOT auto-hide header and DO NOT close menu
+      if (menu && menu.classList.contains('open')) {
+        lastScrollY = window.scrollY;
+        return;
+      }
+
+      const currentScrollY = window.scrollY;
+      const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
+
+      // Prevent bounce glitches on iOS Safari
+      if (currentScrollY < 0 || currentScrollY > maxScrollY) return;
+
+      // Always show header near the top of the page
+      if (currentScrollY <= 20) {
+        mainHeader.style.transform = 'translateY(0)';
+        lastScrollY = currentScrollY;
+        return;
+      }
+
+      // Small threshold to prevent jitter on micro-scrolls
+      if (Math.abs(currentScrollY - lastScrollY) < 6) return;
+
+      if (currentScrollY > lastScrollY && currentScrollY > 70) {
+        // Scrolling DOWN -> Hide header
+        mainHeader.style.transform = 'translateY(-100%)';
+        closeMobileMenu();
+      } else if (currentScrollY < lastScrollY) {
+        // Scrolling UP -> Reveal header
+        mainHeader.style.transform = 'translateY(0)';
+      }
+
+      lastScrollY = currentScrollY;
+    }, { passive: true });
+
+    // Search Modal
+    function toggleSearchModal() {
+      const modal = document.getElementById('search-modal');
+      const input = document.getElementById('search-input');
+      if (!modal) return;
+      if (modal.classList.contains('hidden')) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        if (input) setTimeout(() => input.focus(), 100);
+      } else {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+      lucide.createIcons();
+    }
+
+    function closeSearchModal(event) {
+      if (event && event.target && event.target.id !== 'search-modal') return;
+      const modal = document.getElementById('search-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function handleSearch(query) {
+      const resultsContainer = document.getElementById('search-results');
+      if (!resultsContainer) return;
+      const items = resultsContainer.querySelectorAll('a');
+      const q = query.toLowerCase().trim();
+      items.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (!q || text.includes(q)) {
+          item.style.display = 'flex';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
 
     // Accordion Auto Slider Logic (1.5 seconds)
     const cards = document.querySelectorAll('.accordion-card');
@@ -781,23 +1260,146 @@
       container.addEventListener('mouseleave', () => {
         startAutoSlider();
       });
+
+      // Mobile Touch Swipe support
+      let touchStartX = 0;
+      let touchEndX = 0;
+      container.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+      container.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        const diff = touchEndX - touchStartX;
+        if (Math.abs(diff) > 40) {
+          if (diff < 0) nextAccordionSlide();
+          else prevAccordionSlide();
+        }
+      }, { passive: true });
     }
 
     // Bắt đầu chạy slider tự động
     startAutoSlider();
 
-    function openLightbox(imgSrc) {
-      const modal = document.getElementById('lightbox-modal');
-      const img = document.getElementById('lightbox-img');
-      img.src = imgSrc;
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
+    // Album Data
+    const albumData = [
+      { src: "anh/albums/1.jpg", title: "K.lowvic On Stage", caption: "Live Performance #01" },
+      { src: "anh/albums/2.jpg", title: "Festival Energy", caption: "Live Performance #02" },
+      { src: "anh/albums/3.jpg", title: "Crowd Connection", caption: "Live Performance #03" },
+      { src: "anh/albums/4.jpg", title: "Sound & Lights", caption: "Live Performance #04" },
+      { src: "anh/albums/5.jpg", title: "Night Vibe", caption: "Live Performance #05" },
+      { src: "anh/albums/6.jpg", title: "Bass Drop Moment", caption: "Live Performance #06" },
+      { src: "anh/albums/7.jpg", title: "Club Tour Highlights", caption: "Live Performance #07" },
+      { src: "anh/albums/8.jpg", title: "Hype The Beat", caption: "Live Performance #08" },
+      { src: "anh/albums/9.jpg", title: "Unstoppable Emotion", caption: "Live Performance #09" }
+    ];
+
+    let activeLightboxIndex = 0;
+    let lastCardTapTime = 0;
+    let lastCardTapIndex = -1;
+
+    // Single click/tap selects card, double click/tap opens lightbox zoom
+    function handleCardClick(index) {
+      const now = Date.now();
+      const timeDiff = now - lastCardTapTime;
+
+      if (lastCardTapIndex === index && timeDiff > 0 && timeDiff < 380) {
+        // Double Tap / Double Click Detected!
+        openLightbox(index);
+        lastCardTapTime = 0;
+        lastCardTapIndex = -1;
+      } else {
+        lastCardTapTime = now;
+        lastCardTapIndex = index;
+        selectAccordionCard(index);
+      }
     }
 
-    function closeLightbox() {
+    function updateLightboxContent(index) {
+      if (index < 0 || index >= albumData.length) return;
+      activeLightboxIndex = index;
+      const data = albumData[index];
+      const img = document.getElementById('lightbox-img');
+      const title = document.getElementById('lightbox-title');
+      const caption = document.getElementById('lightbox-caption');
+      const counter = document.getElementById('lightbox-counter');
+
+      if (img) {
+        img.style.opacity = '0';
+        img.style.transform = 'scale(0.92)';
+        setTimeout(() => {
+          img.src = data.src;
+          img.style.opacity = '1';
+          img.style.transform = 'scale(1)';
+        }, 120);
+      }
+      if (title) title.textContent = data.title;
+      if (caption) caption.textContent = data.caption;
+      if (counter) counter.textContent = `${index + 1} / ${albumData.length}`;
+    }
+
+    function openLightbox(index) {
       const modal = document.getElementById('lightbox-modal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
+      if (!modal) return;
+      
+      const idx = typeof index === 'number' ? index : currentSlide;
+      updateLightboxContent(idx);
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      lucide.createIcons();
+
+      // Tạm dừng auto slider khi đang mở ảnh lớn
+      if (autoSlideTimer) clearInterval(autoSlideTimer);
+    }
+
+    function closeLightbox(event) {
+      if (event && event.target && event.target.id !== 'lightbox-modal') return;
+      const modal = document.getElementById('lightbox-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+      startAutoSlider();
+    }
+
+    function nextLightboxImg() {
+      const nextIdx = (activeLightboxIndex + 1) % albumData.length;
+      updateLightboxContent(nextIdx);
+      selectAccordionCard(nextIdx);
+    }
+
+    function prevLightboxImg() {
+      const prevIdx = (activeLightboxIndex - 1 + albumData.length) % albumData.length;
+      updateLightboxContent(prevIdx);
+      selectAccordionCard(prevIdx);
+    }
+
+    // Keyboard navigation for Lightbox
+    window.addEventListener('keydown', (e) => {
+      const modal = document.getElementById('lightbox-modal');
+      if (modal && !modal.classList.contains('hidden')) {
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowRight') nextLightboxImg();
+        if (e.key === 'ArrowLeft') prevLightboxImg();
+      }
+    });
+
+    // Touch swipe navigation for Lightbox Modal
+    const lightboxModal = document.getElementById('lightbox-modal');
+    if (lightboxModal) {
+      let lbTouchStartX = 0;
+      let lbTouchEndX = 0;
+      lightboxModal.addEventListener('touchstart', (e) => {
+        lbTouchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+      lightboxModal.addEventListener('touchend', (e) => {
+        lbTouchEndX = e.changedTouches[0].screenX;
+        const diff = lbTouchEndX - lbTouchStartX;
+        if (Math.abs(diff) > 40) {
+          if (diff < 0) nextLightboxImg();
+          else prevLightboxImg();
+        }
+      }, { passive: true });
     }
   </script>
 </body>

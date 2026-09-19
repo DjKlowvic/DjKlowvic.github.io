@@ -155,12 +155,84 @@ body {
   transform: translateY(0);
 }
 
+/* Mobile Responsiveness for Photo Accordion */
 @media (max-width: 768px) {
   .accordion-track {
-    height: 400px;
-    gap: 8px;
+    height: 440px;
+    gap: 6px;
+    display: flex;
   }
+
+  .accordion-card {
+    border-radius: 16px;
+    min-width: 0;
+    flex: 1;
+    transition: flex 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.4s ease, border-color 0.4s ease;
+  }
+
   .accordion-card.active {
-    flex: 4;
+    flex: 5;
+    border-color: #ff1e38;
+    box-shadow: 0 15px 35px -5px rgba(255, 30, 56, 0.5);
   }
+}
+
+/* ==========================================================================
+   Mobile Navigation Drawer Smooth Slide Animation
+   ========================================================================== */
+#mobile-menu {
+  transition: max-height 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.28s ease;
+  will-change: max-height, opacity;
+}
+
+/* ==========================================================================
+   Warm Yellow Neon Sweep Transition for DJ Profile Section
+   ========================================================================== */
+#profile-dj {
+  position: relative;
+  overflow: hidden;
+  background-color: #000000;
+}
+
+.dj-neon-beam {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #ffffff;
+  box-shadow: 
+    0 0 6px #ffffff,
+    0 0 14px #ffd000,
+    0 0 28px #ffb703,
+    0 0 50px #fb8500,
+    0 0 80px rgba(255, 183, 3, 0.95),
+    0 0 130px rgba(251, 133, 0, 0.7);
+  z-index: 35;
+  pointer-events: none;
+  transform: translateX(-50%);
+  opacity: 0;
+  will-change: left, opacity;
+}
+
+.dj-neon-beam::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -45px;
+  right: -45px;
+  background: radial-gradient(ellipse at center, rgba(255, 190, 11, 0.5) 0%, rgba(251, 133, 0, 0.2) 50%, transparent 75%);
+  pointer-events: none;
+}
+
+.dj-neon-beam::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 100%;
+  width: 90px;
+  background: linear-gradient(to left, rgba(255, 183, 3, 0.35) 0%, rgba(251, 133, 0, 0.1) 60%, transparent 100%);
+  pointer-events: none;
 }
